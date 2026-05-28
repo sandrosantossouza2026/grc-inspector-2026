@@ -434,7 +434,121 @@ export default function App() {
 
 </div>
       </div>
+{/* COMPLIANCE & RISK CENTER */}
 
+<div
+  style={{
+    marginTop: "40px",
+    background: "#111827",
+    padding: "30px",
+    borderRadius: "24px",
+    border: "1px solid #1E293B"
+  }}
+>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: "30px"
+    }}
+  >
+
+    <h2
+      style={{
+        fontSize: "28px"
+      }}
+    >
+      Compliance & Risk Center
+    </h2>
+
+    <div
+      style={{
+        color: "#10B981"
+      }}
+    >
+      Governança e conformidade contínua
+    </div>
+
+  </div>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, 1fr)",
+      gap: "20px"
+    }}
+  >
+
+    {[
+      {
+        title: "LGPD",
+        status: "Conforme",
+        color: "#10B981"
+      },
+      {
+        title: "BACEN",
+        status: "92%",
+        color: "#10B981"
+      },
+      {
+        title: "CMN",
+        status: "Monitorado",
+        color: "#F97316"
+      },
+      {
+        title: "Logs Auditáveis",
+        status: "Ativo",
+        color: "#10B981"
+      },
+      {
+        title: "TSCM",
+        status: "Operacional",
+        color: "#10B981"
+      },
+      {
+        title: "Disponibilidade",
+        status: "99.2%",
+        color: "#10B981"
+      }
+    ].map((item, index) => (
+
+      <div
+        key={index}
+        style={{
+          background: "#020617",
+          padding: "25px",
+          borderRadius: "18px",
+          border: "1px solid #1E293B"
+        }}
+      >
+
+        <div
+          style={{
+            color: "#94A3B8",
+            marginBottom: "15px"
+          }}
+        >
+          {item.title}
+        </div>
+
+        <div
+          style={{
+            fontSize: "28px",
+            fontWeight: "bold",
+            color: item.color
+          }}
+        >
+          {item.status}
+        </div>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
     </div>
   );
 }
