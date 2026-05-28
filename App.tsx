@@ -1,44 +1,344 @@
 import React from "react";
 
 export default function App() {
+  const alerts = [
+    {
+      title: "Movimentação suspeita de dados",
+      severity: "CRÍTICO",
+      source: "Endpoint Financeiro"
+    },
+    {
+      title: "Acesso privilegiado fora do padrão",
+      severity: "ALTO",
+      source: "VPN Corporativa"
+    },
+    {
+      title: "Possível fraude transacional",
+      severity: "MÉDIO",
+      source: "Sistema Antifraude"
+    }
+  ];
+
   return (
     <div
       style={{
         background: "#020617",
-        color: "white",
         minHeight: "100vh",
-        padding: "40px",
-        fontFamily: "Arial",
+        color: "white",
+        display: "flex",
+        fontFamily: "Arial"
       }}
     >
-      <h1 style={{ fontSize: "48px", color: "#10B981" }}>
-        GRC Inspector
-      </h1>
 
-      <p style={{ marginTop: "20px", fontSize: "22px" }}>
-        Plataforma Integrada de Inteligência e Compliance
-      </p>
+      {/* SIDEBAR */}
 
       <div
         style={{
-          marginTop: "40px",
-          background: "#111827",
+          width: "280px",
+          background: "#0F172A",
           padding: "30px",
-          borderRadius: "20px",
+          borderRight: "1px solid #1E293B"
         }}
       >
-        <h2>Dashboard Executivo</h2>
 
-        <p style={{ marginTop: "20px" }}>
-          ✔ Monitoramento Integrado
+        <h1
+          style={{
+            color: "#10B981",
+            fontSize: "42px",
+            marginBottom: "10px"
+          }}
+        >
+          GRC Inspector
+        </h1>
+
+        <p
+          style={{
+            color: "#94A3B8",
+            marginBottom: "50px"
+          }}
+        >
+          Intelligence Platform
         </p>
 
-        <p>✔ Compliance Digital</p>
+        {[
+          "Dashboard Executivo",
+          "Centro Operacional",
+          "Compliance & GRC",
+          "TSCM",
+          "DFIR",
+          "Inteligência Executiva"
+        ].map((item, index) => (
 
-        <p>✔ Inteligência Analítica</p>
+          <div
+            key={index}
+            style={{
+              padding: "18px",
+              marginBottom: "15px",
+              borderRadius: "14px",
+              background:
+                index === 0
+                  ? "#10B98122"
+                  : "#111827",
+              cursor: "pointer",
+              border:
+                index === 0
+                  ? "1px solid #10B981"
+                  : "1px solid #1E293B"
+            }}
+          >
+            {item}
+          </div>
 
-        <p>✔ Proteção Institucional</p>
+        ))}
       </div>
+
+      {/* CONTEÚDO */}
+
+      <div
+        style={{
+          flex: 1,
+          padding: "40px"
+        }}
+      >
+
+        {/* HEADER */}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "40px"
+          }}
+        >
+
+          <div>
+
+            <h2
+              style={{
+                fontSize: "42px",
+                marginBottom: "10px"
+              }}
+            >
+              Executive Overview
+            </h2>
+
+            <p
+              style={{
+                color: "#94A3B8",
+                fontSize: "18px"
+              }}
+            >
+              Centro Integrado de Inteligência, Compliance e Proteção Institucional
+            </p>
+
+          </div>
+
+          <div
+            style={{
+              background: "#111827",
+              padding: "25px",
+              borderRadius: "18px",
+              border: "1px solid #1E293B"
+            }}
+          >
+
+            <div
+              style={{
+                color: "#94A3B8",
+                marginBottom: "10px"
+              }}
+            >
+              Status Operacional
+            </div>
+
+            <div
+              style={{
+                color: "#10B981",
+                fontSize: "28px",
+                fontWeight: "bold"
+              }}
+            >
+              Operacional 24x7
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* KPIs */}
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "20px",
+            marginBottom: "40px"
+          }}
+        >
+
+          {[
+            {
+              title: "Ativos Monitorados",
+              value: "5.000",
+              color: "white"
+            },
+            {
+              title: "Alertas Críticos",
+              value: "18",
+              color: "#EF4444"
+            },
+            {
+              title: "Compliance BACEN",
+              value: "92%",
+              color: "#10B981"
+            },
+            {
+              title: "Integridade Operacional",
+              value: "Moderado",
+              color: "#F97316"
+            }
+          ].map((kpi, index) => (
+
+            <div
+              key={index}
+              style={{
+                background: "#111827",
+                padding: "30px",
+                borderRadius: "20px",
+                border: "1px solid #1E293B"
+              }}
+            >
+
+              <div
+                style={{
+                  color: "#94A3B8",
+                  marginBottom: "15px"
+                }}
+              >
+                {kpi.title}
+              </div>
+
+              <div
+                style={{
+                  fontSize: "38px",
+                  fontWeight: "bold",
+                  color: kpi.color
+                }}
+              >
+                {kpi.value}
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+        {/* ALERTAS */}
+
+        <div
+          style={{
+            background: "#111827",
+            padding: "30px",
+            borderRadius: "24px",
+            border: "1px solid #1E293B"
+          }}
+        >
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "30px"
+            }}
+          >
+
+            <h2
+              style={{
+                fontSize: "28px"
+              }}
+            >
+              Alertas Estratégicos
+            </h2>
+
+            <div
+              style={{
+                color: "#10B981"
+              }}
+            >
+              Atualização em tempo real
+            </div>
+
+          </div>
+
+          {alerts.map((alert, index) => (
+
+            <div
+              key={index}
+              style={{
+                background: "#020617",
+                padding: "25px",
+                borderRadius: "18px",
+                marginBottom: "20px",
+                border: "1px solid #1E293B",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
+            >
+
+              <div>
+
+                <div
+                  style={{
+                    fontSize: "20px",
+                    marginBottom: "10px"
+                  }}
+                >
+                  {alert.title}
+                </div>
+
+                <div
+                  style={{
+                    color: "#94A3B8"
+                  }}
+                >
+                  Fonte: {alert.source}
+                </div>
+
+              </div>
+
+              <div
+                style={{
+                  padding: "10px 18px",
+                  borderRadius: "999px",
+                  background:
+                    alert.severity === "CRÍTICO"
+                      ? "#EF444422"
+                      : alert.severity === "ALTO"
+                      ? "#F9731622"
+                      : "#EAB30822",
+                  color:
+                    alert.severity === "CRÍTICO"
+                      ? "#EF4444"
+                      : alert.severity === "ALTO"
+                      ? "#F97316"
+                      : "#EAB308",
+                  fontWeight: "bold"
+                }}
+              >
+                {alert.severity}
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
+
     </div>
   );
 }
