@@ -547,7 +547,26 @@ export default function App() {
     ))}
 
   </div>
+      </div>
 
+      {/* FOOTER */}
+
+      <div
+        style={{
+          marginTop: "40px",
+          paddingTop: "20px",
+          borderTop: "1px solid #1E293B",
+          color: "#94A3B8",
+          fontSize: "14px",
+          textAlign: "center"
+        }}
+      >
+        GRC Inspector © 2026 — Intelligence Platform
+      </div>
+
+    </div>
+  );
+}
 </div>
     </div>
   );
