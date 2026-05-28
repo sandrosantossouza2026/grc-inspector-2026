@@ -336,7 +336,103 @@ export default function App() {
           ))}
 
         </div>
+{/* TIMELINE OPERACIONAL */}
 
+<div
+  style={{
+    marginTop: "40px",
+    background: "#111827",
+    padding: "30px",
+    borderRadius: "24px",
+    border: "1px solid #1E293B"
+  }}
+>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: "30px"
+    }}
+  >
+
+    <h2
+      style={{
+        fontSize: "28px"
+      }}
+    >
+      Timeline Operacional
+    </h2>
+
+    <div
+      style={{
+        color: "#94A3B8"
+      }}
+    >
+      Últimos eventos correlacionados
+    </div>
+
+  </div>
+
+  {[
+    {
+      time: "19:42",
+      event: "Tentativa de acesso privilegiado",
+      severity: "#EF4444"
+    },
+    {
+      time: "18:15",
+      event: "Correlação antifraude identificada",
+      severity: "#F97316"
+    },
+    {
+      time: "16:22",
+      event: "Varredura TSCM concluída",
+      severity: "#10B981"
+    }
+  ].map((item, index) => (
+
+    <div
+      key={index}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        marginBottom: "20px",
+        padding: "18px",
+        background: "#020617",
+        borderRadius: "16px",
+        border: "1px solid #1E293B"
+      }}
+    >
+
+      <div
+        style={{
+          width: "12px",
+          height: "12px",
+          borderRadius: "999px",
+          background: item.severity,
+          marginRight: "20px"
+        }}
+      />
+
+      <div
+        style={{
+          width: "90px",
+          color: "#94A3B8"
+        }}
+      >
+        {item.time}
+      </div>
+
+      <div>
+        {item.event}
+      </div>
+
+    </div>
+
+  ))}
+
+</div>
       </div>
 
     </div>
