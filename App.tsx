@@ -432,6 +432,8 @@ export default function App() {
 
   ))}
 
+    {/* FIM TIMELINE */}
+  
 </div>
 
 {/* COMPLIANCE & RISK CENTER */}
@@ -544,9 +546,9 @@ export default function App() {
 
       </div>
 
-    ))}
+     ))}
 
-        </div>
+  </div>
 
 </div>
       
