@@ -433,7 +433,7 @@ export default function App() {
   ))}
 
 </div>
-      </div>
+
 {/* COMPLIANCE & RISK CENTER */}
 
 <div
@@ -550,21 +550,7 @@ export default function App() {
 
 </div>
       
-      {/* FOOTER */}
-
-      <div
-        style={{
-          marginTop: "40px",
-          paddingTop: "20px",
-          borderTop: "1px solid #1E293B",
-          color: "#94A3B8",
-          fontSize: "14px",
-          textAlign: "center"
-        }}
-      >
-        GRC Inspector © 2026 — Intelligence Platform
-      </div>
-{/* RISK HEATMAP */}
+ {/* RISK HEATMAP */}
 
 <div
   style={{
