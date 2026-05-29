@@ -179,8 +179,8 @@ export default function App() {
 
           {[
             {
-              title: "Ativos Monitorados",
-              value: "5.000",
+              title: "Ativos e Processos Monitorados",
+              value: "2.734",
               color: "white"
             },
             {
