@@ -42,7 +42,7 @@ export default function App() {
       >
 
 <img
-  src="<a href="https://postimg.cc/ppT0Hwcb" target="_blank"><img src="https://i.postimg.cc/ppT0Hwcb/logo-grc.png" alt="logo-grc"></a>"
+  src="<a href="https://postimg.cc/ppT0Hwcb" target="_blank"><img src="https://i.postimg.cc/28dg4m46/logo-grc.png" alt="logo-grc"></a>"
   alt="GRC Solutions"
   style={{
     width: "220px",
