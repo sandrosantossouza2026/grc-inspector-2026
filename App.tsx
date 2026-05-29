@@ -41,24 +41,14 @@ export default function App() {
         }}
       >
 
-        <h1
-          style={{
-            color: "#10B981",
-            fontSize: "42px",
-            marginBottom: "10px"
-          }}
-        >
-          GRC Inspector
-        </h1>
-
-        <p
-          style={{
-            color: "#94A3B8",
-            marginBottom: "50px"
-          }}
-        >
-          Intelligence Platform
-        </p>
+<img
+  src="https://SEU-LINK-AQUI/logo-grc.png"
+  alt="GRC Solutions"
+  style={{
+    width: "220px",
+    maxWidth: "100%"
+  }}
+/>
 
         {[
           "Dashboard Executivo",
