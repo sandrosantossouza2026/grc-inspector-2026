@@ -430,15 +430,11 @@ export default function App() {
 
     </div>
 
-      {/* FIM TIMELINE */}
-  
+  ))}
+
 </div>
-
-{/* COMPLIANCE TEMPORARIAMENTE REMOVIDO */}
-
-    </div>
-      
- {/* RISK HEATMAP
+      </div>
+{/* COMPLIANCE & RISK CENTER */}
 
 <div
   style={{
@@ -450,37 +446,125 @@ export default function App() {
   }}
 >
 
-<h2>Risk Heatmap</h2>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: "30px"
+    }}
+  >
 
-<div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "repeat(5, 80px)",
-    gap: "10px",
-    marginTop: "20px"
-  }}
->
+    <h2
+      style={{
+        fontSize: "28px"
+      }}
+    >
+      Compliance & Risk Center
+    </h2>
 
-{[
-"#22C55E","#22C55E","#FACC15","#FB923C","#EF4444",
-"#22C55E","#FACC15","#FB923C","#EF4444","#EF4444",
-"#22C55E","#22C55E","#FACC15","#FB923C","#EF4444"
-].map((color,index)=>(
-<div
-key={index}
-style={{
-height:"80px",
-background:color,
-borderRadius:"12px"
-}}
-/>
-))} 
+    <div
+      style={{
+        color: "#10B981"
+      }}
+    >
+      Governança e conformidade contínua
+    </div>
+
+  </div>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, 1fr)",
+      gap: "20px"
+    }}
+  >
+
+    {[
+      {
+        title: "LGPD",
+        status: "Conforme",
+        color: "#10B981"
+      },
+      {
+        title: "BACEN",
+        status: "92%",
+        color: "#10B981"
+      },
+      {
+        title: "CMN",
+        status: "Monitorado",
+        color: "#F97316"
+      },
+      {
+        title: "Logs Auditáveis",
+        status: "Ativo",
+        color: "#10B981"
+      },
+      {
+        title: "TSCM",
+        status: "Operacional",
+        color: "#10B981"
+      },
+      {
+        title: "Disponibilidade",
+        status: "99.2%",
+        color: "#10B981"
+      }
+    ].map((item, index) => (
+
+      <div
+        key={index}
+        style={{
+          background: "#020617",
+          padding: "25px",
+          borderRadius: "18px",
+          border: "1px solid #1E293B"
+        }}
+      >
+
+        <div
+          style={{
+            color: "#94A3B8",
+            marginBottom: "15px"
+          }}
+        >
+          {item.title}
+        </div>
+
+        <div
+          style={{
+            fontSize: "28px",
+            fontWeight: "bold",
+            color: item.color
+          }}
+        >
+          {item.status}
+        </div>
+
+      </div>
+
+    ))}
+
+        </div>
 
 </div>
+      
+      {/* FOOTER */}
 
-</div>
- */}
+      <div
+        style={{
+          marginTop: "40px",
+          paddingTop: "20px",
+          borderTop: "1px solid #1E293B",
+          color: "#94A3B8",
+          fontSize: "14px",
+          textAlign: "center"
+        }}
+      >
+        GRC Inspector © 2026 — Intelligence Platform
+      </div>
 
-
+    </div>
   );
 }
