@@ -438,13 +438,7 @@ export default function App() {
 
 {/* COMPLIANCE TEMPORARIAMENTE REMOVIDO */}
 
-      </div>
-
-     ))}
-
-  </div>
-
-</div>
+    </div>
       
  {/* RISK HEATMAP
 
