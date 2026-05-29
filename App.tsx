@@ -550,7 +550,7 @@ export default function App() {
 
 </div>
       
- {/* RISK HEATMAP */}
+ {/* RISK HEATMAP
 
 <div
   style={{
@@ -586,11 +586,13 @@ background:color,
 borderRadius:"12px"
 }}
 />
-))}
+))} 
 
 </div>
 
 </div>
+ */}
+
 
   );
 }
