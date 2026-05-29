@@ -430,9 +430,7 @@ export default function App() {
 
     </div>
 
-  ))}
-
-    {/* FIM TIMELINE */}
+      {/* FIM TIMELINE */}
   
 </div>
 
