@@ -592,7 +592,5 @@ borderRadius:"12px"
 
 </div>
 
-</div>
-
   );
 }
