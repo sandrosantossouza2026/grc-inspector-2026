@@ -564,7 +564,47 @@ export default function App() {
       >
         GRC Inspector © 2026 — Intelligence Platform
       </div>
+{/* RISK HEATMAP */}
 
+<div
+  style={{
+    marginTop: "40px",
+    background: "#111827",
+    padding: "30px",
+    borderRadius: "24px",
+    border: "1px solid #1E293B"
+  }}
+>
+
+<h2>Risk Heatmap</h2>
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(5, 80px)",
+    gap: "10px",
+    marginTop: "20px"
+  }}
+>
+
+{[
+"#22C55E","#22C55E","#FACC15","#FB923C","#EF4444",
+"#22C55E","#FACC15","#FB923C","#EF4444","#EF4444",
+"#22C55E","#22C55E","#FACC15","#FB923C","#EF4444"
+].map((color,index)=>(
+<div
+key={index}
+style={{
+height:"80px",
+background:color,
+borderRadius:"12px"
+}}
+/>
+))}
+
+</div>
+
+</div>
     </div>
   );
 }
