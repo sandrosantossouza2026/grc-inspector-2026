@@ -47,15 +47,15 @@ export default function App() {
     marginBottom: "40px"
   }}
 >
-  <img
-    src="https://i.postimg.cc/28dg4m46/logo-grc.png"
-    alt="GRC Solutions"
-    style={{
-      width: "360px",
-      maxWidth: "100%",
-      marginBottom: "25px"
-    }}
-  />
+<img
+  src="https://i.postimg.cc/28dg4m46/logo-grc.png"
+  alt="GRC Solutions"
+  style={{
+    width: "800px",
+    maxWidth: "none",
+    marginBottom: "25px"
+  }}
+/>
 
   <div
     style={{
