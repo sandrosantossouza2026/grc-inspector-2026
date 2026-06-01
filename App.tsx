@@ -58,7 +58,8 @@ export default function App() {
       marginBottom: "-120px"
     }}
   />
-</div>
+
+  <p
     style={{
       marginTop: "10px",
       color: "#94A3B8",
@@ -66,7 +67,7 @@ export default function App() {
     }}
   >
     Intelligence Platform
-  </div>
+  </p>
 </div>
 
         {[
