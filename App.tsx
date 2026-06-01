@@ -41,14 +41,31 @@ export default function App() {
         }}
       >
 
-<img
-  src="<a href="https://postimg.cc/ppT0Hwcb" target="_blank"><img src="https://i.postimg.cc/28dg4m46/logo-grc.png" alt="logo-grc"></a>"
-  alt="GRC Solutions"
+<div
   style={{
-    width: "220px",
-    maxWidth: "100%"
+    textAlign: "center",
+    marginBottom: "40px"
   }}
-/>
+>
+  <img
+    src="https://i.postimg.cc/28dg4m46/logo-grc.png"
+    alt="GRC Solutions"
+    style={{
+      width: "220px",
+      maxWidth: "100%"
+    }}
+  />
+
+  <div
+    style={{
+      marginTop: "10px",
+      color: "#94A3B8",
+      fontSize: "14px"
+    }}
+  >
+    Intelligence Platform
+  </div>
+</div>
 
         {[
           "Dashboard Executivo",
