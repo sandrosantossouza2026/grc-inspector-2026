@@ -51,7 +51,7 @@ export default function App() {
   src="https://i.postimg.cc/28dg4m46/logo-grc.png"
   alt="GRC Solutions"
   style={{
-    width: "400px",
+    width: "320px",
     maxWidth: "none",
     marginBottom: "25px"
   }}
