@@ -34,9 +34,9 @@ export default function App() {
 
       <div
         style={{
-          width: "280px",
+          width: "300px",
           background: "#0F172A",
-          padding: "30px",
+          padding: "30px 20px",
           borderRight: "1px solid #1E293B"
         }}
       >
@@ -51,7 +51,7 @@ export default function App() {
   src="/logo-grc.png"
   alt="GRC Solutions"
   style={{
-    width: "240px",
+    width: "270px",
     maxWidth: "100%",
     filter: "drop-shadow(0 0 12px rgba(16, 185, 129, 0.3))"
   }}
