@@ -345,10 +345,6 @@ function TelaLogin({ onLogin }: { onLogin: (nome: string, cliente: string) => vo
             {carregando ? "Autenticando..." : "Entrar"}
           </button>
 
-          <div style={{ marginTop: "20px", padding: "14px", background: "#020617", borderRadius: "12px", border: "1px solid #1E293B" }}>
-            <div style={{ color: "#64748B", fontSize: "11px", marginBottom: "6px" }}>Credenciais de demonstração:</div>
-            <div style={{ color: "#94A3B8", fontSize: "12px" }}>Usuário: <span style={{ color: "#10B981" }}>admin</span> &nbsp;|&nbsp; Senha: <span style={{ color: "#10B981" }}>grc2026</span></div>
-          </div>
         </div>
 
         <div style={{ textAlign: "center", marginTop: "24px", color: "#334155", fontSize: "12px" }}>
