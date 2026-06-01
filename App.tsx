@@ -572,7 +572,7 @@ export default function App() {
       >
         GRC Inspector © 2026 — Intelligence Platform
       </div>
-
+ {/* ULTIMA VERSÃO OK */}
     </div>
   );
 }
