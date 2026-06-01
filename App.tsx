@@ -48,7 +48,7 @@ export default function App() {
   }}
 >
 <img
-  src="https://i.postimg.cc/28dg4m46/logo-grc.png"
+  src="/logo-grc.png"
   alt="GRC Solutions"
   style={{
     width: "320px",
