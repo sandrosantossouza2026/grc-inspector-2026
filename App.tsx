@@ -48,12 +48,12 @@ export default function App() {
   }}
 >
 <img
-  src="/logo-grc.png"
+  src="./logo-grc.png"
   alt="GRC Solutions"
   style={{
-    width: "320px",
-    maxWidth: "none",
-    marginBottom: "25px"
+    width: "260px",
+    maxWidth: "100%",
+    marginBottom: "20px"
   }}
 />
 
