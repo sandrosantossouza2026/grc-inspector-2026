@@ -44,20 +44,21 @@ export default function App() {
 <div
   style={{
     textAlign: "center",
-    marginBottom: "40px"
+    marginBottom: "30px",
+    overflow: "hidden"
   }}
 >
-<img
-  src="./logo-grc.png"
-  alt="GRC Solutions"
-  style={{
-    width: "260px",
-    maxWidth: "100%",
-    marginBottom: "20px"
-  }}
-/>
-
-  <div
+  <img
+    src="https://i.postimg.cc/28dg4m46/logo-grc.png"
+    alt="GRC Solutions"
+    style={{
+      width: "650px",
+      marginLeft: "-180px",
+      marginTop: "-120px",
+      marginBottom: "-120px"
+    }}
+  />
+</div>
     style={{
       marginTop: "10px",
       color: "#94A3B8",
