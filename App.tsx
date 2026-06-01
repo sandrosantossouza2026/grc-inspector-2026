@@ -44,22 +44,19 @@ export default function App() {
 <div
   style={{
     textAlign: "center",
-    marginBottom: "30px",
-    overflow: "hidden"
+    marginBottom: "40px"
   }}
 >
   <img
     src="https://i.postimg.cc/28dg4m46/logo-grc.png"
     alt="GRC Solutions"
     style={{
-      width: "650px",
-      marginLeft: "-180px",
-      marginTop: "-120px",
-      marginBottom: "-120px"
+      width: "220px",
+      maxWidth: "100%"
     }}
   />
 
-  <p
+  <div
     style={{
       marginTop: "10px",
       color: "#94A3B8",
@@ -67,7 +64,7 @@ export default function App() {
     }}
   >
     Intelligence Platform
-  </p>
+  </div>
 </div>
 
         {[
@@ -443,7 +440,7 @@ export default function App() {
   ))}
 
 </div>
-      
+      </div>
 {/* COMPLIANCE & RISK CENTER */}
 
 <div
