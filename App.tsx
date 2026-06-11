@@ -27,6 +27,7 @@ const navItems = [
   "DFIR",
   "Inteligência Executiva",
   "GRC 360°",
+  "360° Terrorismo & CO",
 ];
 
 const alertas = [
@@ -954,6 +955,299 @@ function GRC360() {
   );
 }
 
+// ── DADOS: TERRORISMO & CRIME ORGANIZADO ──
+const alertasTerrorismo = [
+  { nome: "Roberto Souza", doc: "CPF ***789-01", tipo: "PF", cargo: "Diretor Comercial", vinculo: "PCC", nivel: "CRÍTICO", data: "01/06/2026" },
+  { nome: "DataHub Brasil Ltda.", doc: "CNPJ 45.123.678/0001-55", tipo: "PJ", cargo: "Integração de Dados", vinculo: "PCC", nivel: "CRÍTICO", data: "29/05/2026" },
+  { nome: "Logística Rápida S.A.", doc: "CNPJ 78.901.234/0001-11", tipo: "PJ", cargo: "Transporte", vinculo: "CV", nivel: "ALTO", data: "27/05/2026" },
+  { nome: "Marcos Vinicius Lima", doc: "CPF ***321-88", tipo: "PF", cargo: "Sócio", vinculo: "CV", nivel: "ALTO", data: "25/05/2026" },
+  { nome: "Print Express S.A.", doc: "CNPJ 55.666.777/0001-88", tipo: "PJ", cargo: "Impressão/Documentos", vinculo: "PCC", nivel: "MÉDIO", data: "22/05/2026" },
+  { nome: "Carla Mendonça", doc: "CPF ***112-33", tipo: "PF", cargo: "Representante Comercial", vinculo: "CV", nivel: "MÉDIO", data: "19/05/2026" },
+];
+
+const timelineTerrorismo = [
+  { hora: "Hoje 14:32", texto: "Novo vínculo PCC confirmado: DataHub Brasil adicionado à base restritiva", cor: "#EF4444" },
+  { hora: "Hoje 11:15", texto: "Alteração societária suspeita detectada em Logística Rápida S.A.", cor: "#F97316" },
+  { hora: "Ontem 19:44", texto: "Correspondência com lista COAF: 3 novos CPFs identificados como PEPs", cor: "#EF4444" },
+  { hora: "Ontem 16:02", texto: "Transação atípica acima de R$ 500k sem lastro — Print Express", cor: "#F97316" },
+  { hora: "Ontem 09:30", texto: "Atualização da base: +12 registros adicionados (PCC: 8, CV: 4)", cor: "#10B981" },
+  { hora: "2 dias atrás", texto: "Relatório de inteligência: 5 fornecedores em risco elevado", cor: "#EF4444" },
+];
+
+const redFlagsCGU = [
+  {
+    num: "01", titulo: "Estrutura Societária", ativo: true,
+    itens: [
+      { texto: "Mudanças frequentes de sócios sem justificativa", flag: true },
+      { texto: "Dificuldade em identificar beneficiário final", flag: true },
+      { texto: "Empresa recém-constituída (< 12 meses)", flag: true },
+      { texto: "Múltiplos CNPJs no mesmo endereço", flag: false },
+      { texto: "Sem website ou presença digital", flag: false },
+    ]
+  },
+  {
+    num: "02", titulo: "Operações Financeiras", ativo: true,
+    itens: [
+      { texto: "Fluxos financeiros complexos ou circulares", flag: true },
+      { texto: "Inconsistência de valores com mercado", flag: true },
+      { texto: "Uso excessivo de dinheiro em espécie", flag: false },
+      { texto: "Transferências internacionais sem justificativa", flag: false },
+      { texto: "Inconsistências contábeis", flag: false },
+    ]
+  },
+  {
+    num: "03", titulo: "Atividade Operacional", ativo: false,
+    itens: [
+      { texto: "Falta de infraestrutura compatível", flag: false },
+      { texto: "Sede em endereço residencial", flag: false },
+      { texto: "Volume incompatível com estrutura", flag: false },
+      { texto: "CNAE incompatível com atividades", flag: false },
+      { texto: "Sem histórico para contratos relevantes", flag: false },
+    ]
+  },
+  {
+    num: "04", titulo: "Relacionamentos Comerciais", ativo: true,
+    itens: [
+      { texto: "Ligado a pessoas investigadas", flag: true },
+      { texto: "Relutância em fornecer documentação", flag: true },
+      { texto: "Intermediários sem justificativa", flag: false },
+      { texto: "Transações atípicas para o setor", flag: false },
+    ]
+  },
+  {
+    num: "05", titulo: "Comportamento Organizacional", ativo: false,
+    itens: [
+      { texto: "Sem programa de integridade", flag: false },
+      { texto: "Resistência a cláusulas de compliance", flag: false },
+      { texto: "Urgência incomum para fechar negócio", flag: false },
+      { texto: "Inclusão em listas CEIS, CNEP, OFAC", flag: false },
+      { texto: "Mídias negativas / múltiplos processos", flag: false },
+    ]
+  },
+  {
+    num: "06", titulo: "Indicadores Adicionais", ativo: false,
+    itens: [
+      { texto: "Setor vulnerável (combustível, logística)", flag: false },
+      { texto: "Empresa detida por offshores", flag: false },
+      { texto: "Autuações por órgãos de fiscalização", flag: false },
+      { texto: "Atuação em área de fronteira ou conflito", flag: false },
+    ]
+  },
+];
+
+// ── TELA: TERRORISMO & CRIME ORGANIZADO ──
+function Terrorismo360() {
+  const isMobile = useIsMobile();
+  const [busca, setBusca] = useState("");
+  const [filtroVinculo, setFiltroVinculo] = useState("Todos");
+  const [consultado, setConsultado] = useState<typeof alertasTerrorismo[0] | null>(null);
+  const [buscando, setBuscando] = useState(false);
+
+  const filtrados = alertasTerrorismo.filter(a => {
+    const matchBusca = a.nome.toLowerCase().includes(busca.toLowerCase()) || a.doc.includes(busca);
+    const matchVinculo = filtroVinculo === "Todos" || a.vinculo === filtroVinculo;
+    return matchBusca && matchVinculo;
+  });
+
+  const handleConsultar = () => {
+    if (!busca) return;
+    setBuscando(true);
+    setTimeout(() => {
+      const found = alertasTerrorismo.find(a =>
+        a.nome.toLowerCase().includes(busca.toLowerCase()) || a.doc.includes(busca)
+      );
+      setConsultado(found || null);
+      setBuscando(false);
+    }, 900);
+  };
+
+  const nPCC = alertasTerrorismo.filter(a => a.vinculo === "PCC").length;
+  const nCV = alertasTerrorismo.filter(a => a.vinculo === "CV").length;
+  const nCritico = alertasTerrorismo.filter(a => a.nivel === "CRÍTICO").length;
+
+  return (
+    <div>
+      {/* ── HEADER ── */}
+      <div style={{ marginBottom: "20px" }}>
+        <h2 style={{ fontSize: isMobile ? "20px" : "32px", margin: 0 }}>
+          GRC 360° <span style={{ color: "#EF4444" }}>— Terrorismo & Crime Organizado</span>
+        </h2>
+        <p style={{ color: "#94A3B8", fontSize: "12px", marginTop: "6px", marginBottom: "8px" }}>
+          Base de dados integrada · PCC · CV · Organizações Criminosas Transnacionais
+        </p>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#EF444422", border: "1px solid #EF4444", borderRadius: "8px", padding: "6px 14px", color: "#EF4444", fontWeight: "bold", fontSize: "11px" }}>
+          ⚠ PCC e CV classificados como organizações terroristas — STJ 2025
+        </div>
+      </div>
+      {/* ── FIM HEADER ── */}
+
+      {/* ── KPIs ── */}
+      <Grid cols={isMobile ? 2 : 5} gap={12}>
+        <Card><div style={{ color: "#94A3B8", fontSize: "10px", marginBottom: "6px" }}>Alertas Críticos Ativos</div><div style={{ fontSize: "24px", fontWeight: "bold", color: "#EF4444" }}>{nCritico}</div></Card>
+        <Card><div style={{ color: "#94A3B8", fontSize: "10px", marginBottom: "6px" }}>Vínculos PCC</div><div style={{ fontSize: "24px", fontWeight: "bold", color: "#EF4444" }}>{nPCC}</div></Card>
+        <Card><div style={{ color: "#94A3B8", fontSize: "10px", marginBottom: "6px" }}>Vínculos CV</div><div style={{ fontSize: "24px", fontWeight: "bold", color: "#F97316" }}>{nCV}</div></Card>
+        <Card><div style={{ color: "#94A3B8", fontSize: "10px", marginBottom: "6px" }}>Entidades Monitoradas</div><div style={{ fontSize: "24px", fontWeight: "bold", color: "#F97316" }}>138</div></Card>
+        <Card><div style={{ color: "#94A3B8", fontSize: "10px", marginBottom: "6px" }}>Consultas (30d)</div><div style={{ fontSize: "24px", fontWeight: "bold", color: "#3B82F6" }}>412</div></Card>
+      </Grid>
+      {/* ── FIM KPIs ── */}
+
+      {/* ── BUSCA ATIVA ── */}
+      <Card style={{ marginBottom: "16px" }}>
+        <div style={{ display: "flex", gap: "10px", flexWrap: isMobile ? "wrap" : "nowrap", alignItems: "center" }}>
+          <input
+            type="text"
+            placeholder="Buscar por nome, CPF ou CNPJ..."
+            value={busca}
+            onChange={e => { setBusca(e.target.value); setConsultado(null); }}
+            onKeyDown={e => e.key === "Enter" && handleConsultar()}
+            style={{ flex: 1, padding: "10px 14px", borderRadius: "8px", border: "1px solid #1E293B", background: "#020617", color: "white", fontSize: "13px", outline: "none", minWidth: "160px" }}
+          />
+          <select
+            value={filtroVinculo}
+            onChange={e => setFiltroVinculo(e.target.value)}
+            style={{ padding: "10px 12px", borderRadius: "8px", border: "1px solid #1E293B", background: "#020617", color: "#94A3B8", fontSize: "12px", outline: "none" }}
+          >
+            <option>Todos</option>
+            <option>PCC</option>
+            <option>CV</option>
+          </select>
+          <button
+            onClick={handleConsultar}
+            disabled={buscando || !busca}
+            style={{ padding: "10px 20px", borderRadius: "8px", border: "none", background: buscando || !busca ? "#1E293B" : "#EF4444", color: buscando || !busca ? "#64748B" : "white", fontWeight: "bold", fontSize: "12px", cursor: buscando || !busca ? "not-allowed" : "pointer", whiteSpace: "nowrap" }}
+          >
+            {buscando ? "Consultando..." : "🔍 Consultar Base"}
+          </button>
+        </div>
+
+        {/* ── RESULTADO DA CONSULTA ── */}
+        {consultado && (
+          <div style={{ marginTop: "14px", background: "#020617", border: "1px solid #EF444466", borderRadius: "12px", padding: "16px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px", flexWrap: "wrap", gap: "8px" }}>
+              <div>
+                <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "2px" }}>{consultado.nome}</div>
+                <div style={{ color: "#64748B", fontSize: "12px" }}>{consultado.doc} · {consultado.cargo}</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontSize: "28px", fontWeight: "bold", color: "#EF4444" }}>91</div>
+                <div style={{ fontSize: "10px", color: "#94A3B8" }}>Score de Risco</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "12px" }}>
+              <div style={{ padding: "3px 10px", borderRadius: "999px", background: "#EF444422", color: "#EF4444", border: "1px solid #EF444444", fontSize: "11px", fontWeight: "bold" }}>
+                ● {consultado.vinculo} — Vínculo Confirmado
+              </div>
+              <div style={{ padding: "3px 10px", borderRadius: "999px", ...getSeverityStyle(consultado.nivel), fontSize: "11px", fontWeight: "bold" }}>{consultado.nivel}</div>
+              <div style={{ padding: "3px 10px", borderRadius: "999px", background: "#8B5CF622", color: "#8B5CF6", border: "1px solid #8B5CF644", fontSize: "11px", fontWeight: "bold" }}>Lista COAF</div>
+              <div style={{ padding: "3px 10px", borderRadius: "999px", background: "#3B82F622", color: "#3B82F6", border: "1px solid #3B82F644", fontSize: "11px", fontWeight: "bold" }}>Investigado PF</div>
+            </div>
+            <Grid cols={isMobile ? 2 : 3} gap={8}>
+              {[
+                { label: "Beneficiário Final", val: "Não identificado", alert: true },
+                { label: "Cadastro Federal", val: "Irregular", alert: true },
+                { label: "Lista Restritiva", val: "OFAC + COAF", alert: true },
+                { label: "Constituição", val: "8 meses (recente)", alert: true },
+                { label: "Ações Judiciais", val: "7 em curso", alert: true },
+                { label: "Recomendação", val: "Bloquear imediatamente", alert: true },
+              ].map((d, i) => (
+                <div key={i} style={{ background: "#0F172A", borderRadius: "8px", padding: "8px 10px" }}>
+                  <div style={{ color: "#64748B", fontSize: "10px", marginBottom: "2px" }}>{d.label}</div>
+                  <div style={{ fontSize: "12px", fontWeight: "bold", color: d.alert ? "#EF4444" : "#10B981" }}>{d.val}</div>
+                </div>
+              ))}
+            </Grid>
+          </div>
+        )}
+
+        {busca && !buscando && consultado === null && (
+          <div style={{ marginTop: "12px", padding: "12px 14px", background: "#10B98111", border: "1px solid #10B98133", borderRadius: "8px", color: "#10B981", fontSize: "12px" }}>
+            ✓ Nenhum vínculo encontrado na base para "{busca}" — registro não consta em PCC ou CV
+          </div>
+        )}
+      </Card>
+      {/* ── FIM BUSCA ── */}
+
+      {/* ── ALERTAS + TIMELINE ── */}
+      <Grid1Mobile cols={2} gap={16}>
+
+        {/* ── ALERTAS ── */}
+        <Card>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "14px" }}>Alertas — Base PCC/CV</span>
+            <span style={{ color: "#EF4444", fontSize: "11px", fontWeight: "bold" }}>● Atualização contínua</span>
+          </div>
+          {filtrados.map((a, i) => {
+            const s = getSeverityStyle(a.nivel);
+            return (
+              <div key={i} style={{ background: "#020617", border: "1px solid #1E293B", borderRadius: "10px", padding: "12px 14px", marginBottom: "8px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: "13px", fontWeight: "bold", marginBottom: "2px" }}>{a.nome}</div>
+                  <div style={{ color: "#64748B", fontSize: "11px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.doc} · {a.data}</div>
+                </div>
+                <div style={{ display: "flex", gap: "5px", flexShrink: 0 }}>
+                  <div style={{ padding: "2px 8px", borderRadius: "999px", background: a.vinculo === "PCC" ? "#EF444422" : "#F9731622", color: a.vinculo === "PCC" ? "#EF4444" : "#F97316", border: `1px solid ${a.vinculo === "PCC" ? "#EF444444" : "#F9731644"}`, fontSize: "10px", fontWeight: "bold" }}>{a.vinculo}</div>
+                  <div style={{ padding: "2px 8px", borderRadius: "999px", background: s.bg, color: s.color, fontSize: "10px", fontWeight: "bold" }}>{a.nivel}</div>
+                </div>
+              </div>
+            );
+          })}
+          {filtrados.length === 0 && (
+            <div style={{ color: "#64748B", fontSize: "12px", textAlign: "center", padding: "20px 0" }}>Nenhum alerta encontrado</div>
+          )}
+        </Card>
+        {/* ── FIM ALERTAS ── */}
+
+        {/* ── TIMELINE ── */}
+        <Card>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "14px" }}>Timeline — Eventos de Risco</span>
+            <span style={{ color: "#94A3B8", fontSize: "11px" }}>Últimas 72h</span>
+          </div>
+          {timelineTerrorismo.map((t, i) => (
+            <div key={i} style={{ display: "flex", gap: "10px", paddingBottom: "10px", marginBottom: "10px", borderBottom: i < timelineTerrorismo.length - 1 ? "1px solid #1E293B" : "none" }}>
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: t.cor, marginTop: "4px", flexShrink: 0 }} />
+              <div>
+                <div style={{ color: "#64748B", fontSize: "10px", marginBottom: "2px" }}>{t.hora}</div>
+                <div style={{ fontSize: "12px", lineHeight: "1.4" }}>{t.texto}</div>
+              </div>
+            </div>
+          ))}
+        </Card>
+        {/* ── FIM TIMELINE ── */}
+
+      </Grid1Mobile>
+      {/* ── FIM ALERTAS + TIMELINE ── */}
+
+      {/* ── RED FLAGS CGU-ICC ── */}
+      <Card>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+          <span style={{ fontWeight: "bold", fontSize: "14px" }}>Red Flags — CGU-ICC · Crime Organizado</span>
+          <span style={{ color: "#F97316", fontSize: "11px" }}>⚠ 3 grupos com alertas ativos</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3, 1fr)", gap: "10px" }}>
+          {redFlagsCGU.map((rf, i) => (
+            <div key={i} style={{ background: rf.ativo ? "#EF444408" : "#020617", border: `1px solid ${rf.ativo ? "#EF444466" : "#1E293B"}`, borderRadius: "10px", padding: "14px" }}>
+              <div style={{ fontSize: "18px", fontWeight: "bold", color: rf.ativo ? "#EF4444" : "#64748B", marginBottom: "4px" }}>{rf.num}</div>
+              <div style={{ fontSize: "12px", fontWeight: "bold", marginBottom: "8px" }}>{rf.titulo}</div>
+              <ul style={{ listStyle: "none" }}>
+                {rf.itens.map((item, j) => (
+                  <li key={j} style={{ fontSize: "11px", color: item.flag ? "#FCA5A5" : "#64748B", paddingLeft: "12px", position: "relative", marginBottom: "3px" }}>
+                    <span style={{ position: "absolute", left: 0, color: item.flag ? "#EF4444" : "#334155" }}>•</span>
+                    {item.texto}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Card>
+      {/* ── FIM RED FLAGS CGU-ICC ── */}
+
+    </div>
+  );
+}
+// ── FIM TELA TERRORISMO ──
+
 // ── APP PRINCIPAL ──
 export default function App() {
   const [logado, setLogado] = useState(false);
@@ -977,6 +1271,7 @@ export default function App() {
       case 4: return <DFIR />;
       case 5: return <InteligenciaExecutiva />;
       case 6: return <GRC360 />;
+      case 7: return <Terrorismo360 />;
       default: return <DashboardExecutivo />;
     }
   };
