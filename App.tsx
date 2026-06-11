@@ -1076,7 +1076,7 @@ function Terrorismo360() {
           Base de dados integrada · PCC · CV · Organizações Criminosas Transnacionais
         </p>
         <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#EF444422", border: "1px solid #EF4444", borderRadius: "8px", padding: "6px 14px", color: "#EF4444", fontWeight: "bold", fontSize: "11px" }}>
-          ⚠ PCC e CV classificados como organizações terroristas — STJ 2025
+          ⚠ PCC e CV designados como organizações terroristas — Departamento de Estado dos EUA · Mai/2026
         </div>
       </div>
       {/* ── FIM HEADER ── */}
