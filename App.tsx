@@ -77,7 +77,7 @@ const inteligenciaAmeacas = [
 ];
 
 const colaboradores360 = [
-  { nome: "Carlos Mendes", cargo: "Analista Financeiro Sênior", cpf: "***.***.456-78", score: 91, risco: "BAIXO", pendencias: 0, alertas: [] },
+  { nome: "Carlos Almeida", cargo: "Analista Financeiro Sênior", cpf: "***.***.456-78", score: 91, risco: "BAIXO", pendencias: 0, alertas: [] },
   { nome: "Fernanda Lima", cargo: "Gerente de TI", cpf: "***.***.123-90", score: 74, risco: "MÉDIO", pendencias: 2, alertas: ["Alteração cadastral recente", "Acesso fora do horário"] },
   { nome: "Roberto Souza", cargo: "Diretor Comercial", cpf: "***.***.789-01", score: 58, risco: "ALTO", pendencias: 4, alertas: ["Processo judicial em curso", "Exposição em lista restritiva", "Mudança de endereço 3x/48h"] },
 ];
