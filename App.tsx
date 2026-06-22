@@ -28,6 +28,8 @@ const navItems = [
   "Inteligência Executiva",
   "GRC 360°",
   "360° Terrorismo & CO",
+  "Riscos Transacionais",
+  "Controles & Auditoria",
 ];
 
 const alertas = [
@@ -77,7 +79,7 @@ const inteligenciaAmeacas = [
 ];
 
 const colaboradores360 = [
-  { nome: "Carlos Almeida", cargo: "Analista Financeiro Sênior", cpf: "***.***.456-78", score: 91, risco: "BAIXO", pendencias: 0, alertas: [] },
+  { nome: "Carlos Mendes", cargo: "Analista Financeiro Sênior", cpf: "***.***.456-78", score: 91, risco: "BAIXO", pendencias: 0, alertas: [] },
   { nome: "Fernanda Lima", cargo: "Gerente de TI", cpf: "***.***.123-90", score: 74, risco: "MÉDIO", pendencias: 2, alertas: ["Alteração cadastral recente", "Acesso fora do horário"] },
   { nome: "Roberto Souza", cargo: "Diretor Comercial", cpf: "***.***.789-01", score: 58, risco: "ALTO", pendencias: 4, alertas: ["Processo judicial em curso", "Exposição em lista restritiva", "Mudança de endereço 3x/48h"] },
 ];
@@ -1248,55 +1250,419 @@ function Terrorismo360() {
 }
 // ── FIM TELA TERRORISMO ──
 
-// ── APP PRINCIPAL ──
-export default function App() {
-  const [logado, setLogado] = useState(false);
-  const [nomeUsuario, setNomeUsuario] = useState("");
-  const [nomeCliente, setNomeCliente] = useState("");
-  const [activeNav, setActiveNav] = useState(0);
-  const [menuAberto, setMenuAberto] = useState(false);
+
+// ── DADOS: RISCOS TRANSACIONAIS ──
+const transacoesAtipicas = [
+  { id: "TXN-2026-0891", tipo: "PIX", valor: "R$ 287.400", conta: "***4521", hora: "23:47", motivo: "Horário atípico + valor acima do perfil", nivel: "CRÍTICO" },
+  { id: "TXN-2026-0887", tipo: "TED", valor: "R$ 1.240.000", conta: "***8834", hora: "22:15", motivo: "Fracionamento detectado (4 TEDs em 2h)", nivel: "CRÍTICO" },
+  { id: "TXN-2026-0882", tipo: "PIX", valor: "R$ 49.900", conta: "***2217", hora: "03:12", motivo: "Madrugada + conta recém-criada (< 30 dias)", nivel: "ALTO" },
+  { id: "TXN-2026-0878", tipo: "DOC", valor: "R$ 98.700", conta: "***6609", hora: "19:33", motivo: "Destinatário em lista restritiva COAF", nivel: "ALTO" },
+  { id: "TXN-2026-0871", tipo: "Caixa", valor: "R$ 45.000", conta: "***1103", hora: "11:22", motivo: "Saque em espécie acima do limite PLD", nivel: "MÉDIO" },
+  { id: "TXN-2026-0865", tipo: "PIX", valor: "R$ 9.800", conta: "***7741", hora: "08:55", motivo: "Sequência de 8 transações abaixo de R$ 10k", nivel: "MÉDIO" },
+];
+
+const tendenciaDados = {
+  pix:  [142, 167, 189, 203, 178, 221, 247],
+  ted:  [34, 28, 41, 37, 52, 49, 61],
+  doc:  [12, 9, 14, 11, 16, 13, 18],
+  meses: ["Dez", "Jan", "Fev", "Mar", "Abr", "Mai", "Jun"],
+};
+
+const scoreContas = [
+  { conta: "***4521", titular: "J. Carvalho ME", score: 94, tendencia: "↑", tipo: "PJ", alertas: 3 },
+  { conta: "***8834", titular: "Distribuidora Rápida Ltda.", score: 88, tendencia: "↑", tipo: "PJ", alertas: 4 },
+  { conta: "***2217", titular: "M. A. Santos", score: 71, tendencia: "→", tipo: "PF", alertas: 1 },
+  { conta: "***6609", titular: "Logística Express S.A.", score: 82, tendencia: "↑", tipo: "PJ", alertas: 2 },
+  { conta: "***7741", titular: "R. Ferreira", score: 63, tendencia: "↑", tipo: "PF", alertas: 1 },
+];
+
+// ── TELA: RISCOS TRANSACIONAIS ──
+function RiscosTransacionais() {
   const isMobile = useIsMobile();
+  const [filtroTipo, setFiltroTipo] = useState("Todos");
+  const [atualizado, setAtualizado] = useState(new Date());
 
-  const handleLogin = (nome: string, cliente: string) => { setNomeUsuario(nome); setNomeCliente(cliente); setLogado(true); };
-  const handleLogout = () => { setLogado(false); setNomeUsuario(""); setNomeCliente(""); setActiveNav(0); };
+  useEffect(() => {
+    const t = setInterval(() => setAtualizado(new Date()), 8000);
+    return () => clearInterval(t);
+  }, []);
 
-  if (!logado) return <TelaLogin onLogin={handleLogin} />;
+  const filtradas = filtroTipo === "Todos"
+    ? transacoesAtipicas
+    : transacoesAtipicas.filter(t => t.tipo === filtroTipo);
 
-  const renderTela = () => {
-    switch (activeNav) {
-      case 0: return <DashboardExecutivo />;
-      case 1: return <CentroOperacional />;
-      case 2: return <ComplianceGRC />;
-      case 3: return <TSCM />;
-      case 4: return <DFIR />;
-      case 5: return <InteligenciaExecutiva />;
-      case 6: return <GRC360 />;
-      case 7: return <Terrorismo360 />;
-      default: return <DashboardExecutivo />;
-    }
-  };
+  const hora = atualizado.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
   return (
-    <div style={{ background: "#020617", minHeight: "100vh", color: "white", fontFamily: "Arial", display: "flex", flexDirection: "column" }}>
-
-      {/* TOPBAR MOBILE */}
-      {isMobile && <TopBar menuAberto={menuAberto} setMenuAberto={setMenuAberto} titulo={navItems[activeNav]} />}
-
-      {/* LAYOUT PRINCIPAL */}
-      <div style={{ display: "flex", flex: 1 }}>
-        <Sidebar activeNav={activeNav} setActiveNav={setActiveNav} nomeUsuario={nomeUsuario} nomeCliente={nomeCliente} onLogout={handleLogout} isMobile={isMobile} menuAberto={menuAberto} setMenuAberto={setMenuAberto} />
-
-        {/* CONTEÚDO */}
-        <div style={{ flex: 1, padding: isMobile ? "16px" : "32px 36px", overflowY: "auto", minWidth: 0 }}>
-          {renderTela()}
+    <div>
+      {/* HEADER */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
+        <div>
+          <h2 style={{ fontSize: isMobile ? "20px" : "32px", margin: 0 }}>Riscos Transacionais</h2>
+          <p style={{ color: "#94A3B8", fontSize: "12px", marginTop: "6px", marginBottom: 0 }}>
+            Monitoramento de transações atípicas · PIX · TED · DOC · Caixa · PLD/FT
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: "10px", alignItems: "center", flexShrink: 0 }}>
+          <div style={{ background: "#EF444422", border: "1px solid #EF4444", borderRadius: "10px", padding: "8px 14px", color: "#EF4444", fontWeight: "bold", fontSize: "11px" }}>
+            ● AO VIVO · {hora}
+          </div>
+          <BotaoPDF />
         </div>
       </div>
 
-      {/* FOOTER */}
-      <div style={{ borderTop: "1px solid #1E293B", background: "#0F172A", color: "#94A3B8", fontSize: "11px", textAlign: "center", padding: "12px 20px" }}>
-        GRC Inspector © 2026 — Intelligence Platform
-      </div>
+      {/* KPIs */}
+      <Grid cols={isMobile ? 2 : 5} gap={12}>
+        {[
+          { label: "Alertas Hoje", val: "47", color: "#EF4444", sub: "+12 vs. ontem" },
+          { label: "Críticos Abertos", val: "8", color: "#EF4444", sub: "Aguardam análise" },
+          { label: "Volume Suspeito (24h)", val: "R$ 4,2M", color: "#F97316", sub: "Em investigação" },
+          { label: "Taxa de Confirmação", val: "34%", color: "#10B981", sub: "Dos alertas gerados" },
+          { label: "Tempo Médio Análise", val: "18min", color: "#3B82F6", sub: "Meta: < 30min" },
+        ].map((k, i) => (
+          <Card key={i}>
+            <div style={{ color: "#94A3B8", fontSize: "10px", marginBottom: "4px" }}>{k.label}</div>
+            <div style={{ fontSize: "22px", fontWeight: "bold", color: k.color }}>{k.val}</div>
+            <div style={{ color: "#64748B", fontSize: "10px", marginTop: "4px" }}>{k.sub}</div>
+          </Card>
+        ))}
+      </Grid>
 
+      {/* GRÁFICO DE TENDÊNCIA + ALERTAS POR TIPO */}
+      <Grid1Mobile cols={2} gap={16}>
+        <Card>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "14px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "14px" }}>Tendência de Alertas por Canal</span>
+            <span style={{ color: "#94A3B8", fontSize: "11px" }}>7 meses</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+            {tendenciaDados.meses.map((m, i) => <span key={i} style={{ color: "#94A3B8", fontSize: "10px" }}>{m}</span>)}
+          </div>
+          <LineChart data={tendenciaDados.pix} color="#3B82F6" />
+          <div style={{ display: "flex", gap: "14px", marginTop: "8px", flexWrap: "wrap" }}>
+            {[["PIX", "#3B82F6"], ["TED", "#F97316"], ["DOC", "#8B5CF6"]].map(([l, c]) => (
+              <div key={l} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <div style={{ width: "10px", height: "3px", background: c as string, borderRadius: "2px" }} />
+                <span style={{ color: "#94A3B8", fontSize: "10px" }}>{l}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <div style={{ fontWeight: "bold", fontSize: "14px", marginBottom: "14px" }}>Alertas por Tipo de Operação</div>
+          {[
+            { tipo: "PIX", qtd: 28, total: 47, color: "#3B82F6" },
+            { tipo: "TED", qtd: 11, total: 47, color: "#F97316" },
+            { tipo: "DOC", qtd: 4, total: 47, color: "#8B5CF6" },
+            { tipo: "Caixa (espécie)", qtd: 4, total: 47, color: "#EF4444" },
+          ].map((item, i) => (
+            <div key={i} style={{ marginBottom: "12px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
+                <span style={{ fontSize: "12px" }}>{item.tipo}</span>
+                <span style={{ fontSize: "11px", color: "#94A3B8" }}>{item.qtd} alertas</span>
+              </div>
+              <ProgressBar valor={Math.round((item.qtd / item.total) * 100)} color={item.color} />
+            </div>
+          ))}
+          <div style={{ marginTop: "14px", padding: "10px 12px", background: "#EF444411", border: "1px solid #EF444433", borderRadius: "8px" }}>
+            <div style={{ color: "#EF4444", fontSize: "11px", fontWeight: "bold" }}>⚠ PIX concentra 60% dos alertas</div>
+            <div style={{ color: "#94A3B8", fontSize: "10px", marginTop: "2px" }}>Padrão: madrugada + contas recém-criadas</div>
+          </div>
+        </Card>
+      </Grid1Mobile>
+
+      {/* FEED DE TRANSAÇÕES ATÍPICAS */}
+      <Card style={{ marginBottom: "16px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px", flexWrap: "wrap", gap: "8px" }}>
+          <span style={{ fontWeight: "bold", fontSize: "14px" }}>Feed de Transações Atípicas — Tempo Real</span>
+          <div style={{ display: "flex", gap: "8px" }}>
+            {["Todos", "PIX", "TED", "DOC", "Caixa"].map(t => (
+              <button key={t} onClick={() => setFiltroTipo(t)}
+                style={{ padding: "4px 10px", borderRadius: "6px", border: filtroTipo === t ? "1px solid #3B82F6" : "1px solid #1E293B", background: filtroTipo === t ? "#3B82F622" : "#020617", color: filtroTipo === t ? "#3B82F6" : "#94A3B8", fontSize: "10px", cursor: "pointer" }}>
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+        {!isMobile && (
+          <div style={{ display: "grid", gridTemplateColumns: "100px 60px 120px 100px 80px 1fr 100px", gap: "0", padding: "0 12px", marginBottom: "8px" }}>
+            {["ID", "Canal", "Valor", "Conta", "Hora", "Motivo do Alerta", "Nível"].map((h, i) => (
+              <div key={i} style={{ color: "#64748B", fontSize: "10px", fontWeight: "bold" }}>{h}</div>
+            ))}
+          </div>
+        )}
+        {filtradas.map((tx, i) => {
+          const s = getSeverityStyle(tx.nivel);
+          const canalColor: Record<string, string> = { PIX: "#3B82F6", TED: "#F97316", DOC: "#8B5CF6", Caixa: "#EF4444" };
+          return (
+            <div key={i} style={{ background: i === 0 ? "#EF444408" : "#020617", border: i === 0 ? "1px solid #EF444433" : "1px solid #1E293B", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", display: isMobile ? "flex" : "grid", gridTemplateColumns: "100px 60px 120px 100px 80px 1fr 100px", gap: "8px", flexDirection: "column" }}>
+              <div style={{ fontFamily: "monospace", color: "#64748B", fontSize: "10px" }}>{tx.id}</div>
+              <div style={{ padding: "2px 6px", borderRadius: "4px", background: `${canalColor[tx.tipo]}22`, color: canalColor[tx.tipo], fontSize: "10px", fontWeight: "bold", width: "fit-content" }}>{tx.tipo}</div>
+              <div style={{ fontSize: "12px", fontWeight: "bold" }}>{tx.valor}</div>
+              <div style={{ color: "#94A3B8", fontSize: "11px", fontFamily: "monospace" }}>{tx.conta}</div>
+              <div style={{ color: "#94A3B8", fontSize: "11px" }}>{tx.hora}</div>
+              <div style={{ fontSize: "11px", color: "#CBD5E1" }}>{tx.motivo}</div>
+              <div style={{ padding: "2px 8px", borderRadius: "999px", background: s.bg, color: s.color, fontSize: "10px", fontWeight: "bold", width: "fit-content" }}>{tx.nivel}</div>
+            </div>
+          );
+        })}
+      </Card>
+
+      {/* SCORE POR CONTA */}
+      <Card>
+        <div style={{ fontWeight: "bold", fontSize: "14px", marginBottom: "14px" }}>Score de Risco Transacional por Conta</div>
+        {scoreContas.map((c, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", background: "#020617", borderRadius: "8px", marginBottom: "6px", border: "1px solid #1E293B", flexWrap: isMobile ? "wrap" : "nowrap" }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: "13px", fontWeight: "bold", marginBottom: "2px" }}>{c.titular}</div>
+              <div style={{ color: "#64748B", fontSize: "10px" }}>{c.conta} · {c.tipo} · {c.alertas} alerta{c.alertas > 1 ? "s" : ""}</div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+              <span style={{ color: c.tendencia === "↑" ? "#EF4444" : "#10B981", fontSize: "16px", fontWeight: "bold" }}>{c.tendencia}</span>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ color: "#64748B", fontSize: "9px" }}>Score</div>
+                <div style={{ fontSize: "20px", fontWeight: "bold", color: c.score >= 80 ? "#EF4444" : c.score >= 60 ? "#F97316" : "#10B981" }}>{c.score}</div>
+              </div>
+              <div style={{ width: "50px" }}>
+                <ProgressBar valor={c.score} color={c.score >= 80 ? "#EF4444" : c.score >= 60 ? "#F97316" : "#10B981"} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </Card>
     </div>
   );
 }
+// ── FIM TELA RISCOS TRANSACIONAIS ──
+
+// ── DADOS: CONTROLES & AUDITORIA ──
+const controlesAreas = [
+  {
+    area: "Prevenção à Lavagem de Dinheiro (PLD/FT)", sigla: "PLD", conformidade: 88,
+    controles: [
+      { nome: "Monitoramento de transações suspeitas", status: "Conforme", kci: "98%", ultima: "01/06/2026" },
+      { nome: "Análise de PEPs e listas restritivas", status: "Conforme", kci: "94%", ultima: "28/05/2026" },
+      { nome: "Treinamento obrigatório anual (equipe)", status: "Em Revisão", kci: "72%", ultima: "15/04/2026" },
+      { nome: "Reporte ao COAF dentro do prazo legal", status: "Conforme", kci: "100%", ultima: "01/06/2026" },
+    ]
+  },
+  {
+    area: "Segurança da Informação (LGPD / ISO 27001)", sigla: "SI", conformidade: 76,
+    controles: [
+      { nome: "Gestão de acessos privilegiados (PAM)", status: "Não Conforme", kci: "61%", ultima: "20/05/2026" },
+      { nome: "Criptografia de dados sensíveis em repouso", status: "Conforme", kci: "100%", ultima: "01/06/2026" },
+      { nome: "Teste de penetração (pentest) anual", status: "Em Revisão", kci: "—", ultima: "Pendente" },
+      { nome: "Gestão de incidentes de segurança", status: "Conforme", kci: "89%", ultima: "28/05/2026" },
+    ]
+  },
+  {
+    area: "Conformidade Regulatória (BACEN / CMN)", sigla: "REG", conformidade: 92,
+    controles: [
+      { nome: "Adequação à Resolução BACEN 4.658", status: "Conforme", kci: "96%", ultima: "01/06/2026" },
+      { nome: "Política de segurança cibernética publicada", status: "Conforme", kci: "100%", ultima: "15/05/2026" },
+      { nome: "Plano de continuidade de negócios (PCN)", status: "Em Revisão", kci: "81%", ultima: "10/05/2026" },
+      { nome: "Relatório anual RACS entregue ao BACEN", status: "Conforme", kci: "100%", ultima: "30/04/2026" },
+    ]
+  },
+  {
+    area: "Controles Financeiros e Contábeis", sigla: "FIN", conformidade: 83,
+    controles: [
+      { nome: "Segregação de funções — aprovação de pagamentos", status: "Conforme", kci: "95%", ultima: "01/06/2026" },
+      { nome: "Conciliação bancária diária", status: "Conforme", kci: "99%", ultima: "Diário" },
+      { nome: "Revisão de alçadas e limites de aprovação", status: "Não Conforme", kci: "68%", ultima: "01/03/2026" },
+      { nome: "Auditoria de contratos de fornecedores críticos", status: "Em Revisão", kci: "74%", ultima: "20/05/2026" },
+    ]
+  },
+];
+
+const historiocoAuditorias = [
+  { id: "AUD-2026-04", area: "PLD/FT", tipo: "Interna", data: "Mai/2026", achados: 2, status: "Encerrada", resultado: "Satisfatório" },
+  { id: "AUD-2026-03", area: "Segurança da Informação", tipo: "Externa", data: "Abr/2026", achados: 5, status: "Em remediação", resultado: "Moderado" },
+  { id: "AUD-2026-02", area: "BACEN / CMN", tipo: "Regulatória", data: "Mar/2026", achados: 1, status: "Encerrada", resultado: "Satisfatório" },
+  { id: "AUD-2026-01", area: "Controles Financeiros", tipo: "Interna", data: "Jan/2026", achados: 3, status: "Encerrada", resultado: "Moderado" },
+  { id: "AUD-2025-08", area: "PLD/FT + SI", tipo: "Externa", data: "Ago/2025", achados: 7, status: "Encerrada", resultado: "Crítico" },
+];
+
+const achadosAbertos = [
+  { id: "ACH-2026-011", descricao: "Gestão de acessos privilegiados sem revisão trimestral", area: "Segurança da Informação", prioridade: "CRÍTICO", prazo: "30/06/2026", responsavel: "TI / CISO" },
+  { id: "ACH-2026-009", descricao: "Alçadas de aprovação de pagamentos desatualizadas desde 2024", area: "Controles Financeiros", prioridade: "ALTO", prazo: "15/07/2026", responsavel: "Financeiro" },
+  { id: "ACH-2026-007", descricao: "Treinamento PLD/FT pendente para 28% da equipe operacional", area: "PLD/FT", prioridade: "ALTO", prazo: "31/07/2026", responsavel: "RH / Compliance" },
+  { id: "ACH-2026-005", descricao: "Pentest não realizado no ciclo 2025/2026", area: "Segurança da Informação", prioridade: "ALTO", prazo: "31/08/2026", responsavel: "TI" },
+  { id: "ACH-2026-003", descricao: "PCN não testado desde outubro/2025", area: "Continuidade", prioridade: "MÉDIO", prazo: "30/09/2026", responsavel: "Operações" },
+];
+
+// ── TELA: CONTROLES & AUDITORIA ──
+function ControlesAuditoria() {
+  const isMobile = useIsMobile();
+  const [abaAtiva, setAbaAtiva] = useState(0);
+  const [areaExpanded, setAreaExpanded] = useState<number | null>(null);
+
+  const totalControles = controlesAreas.reduce((acc, a) => acc + a.controles.length, 0);
+  const conformes = controlesAreas.reduce((acc, a) => acc + a.controles.filter(c => c.status === "Conforme").length, 0);
+  const naoConformes = controlesAreas.reduce((acc, a) => acc + a.controles.filter(c => c.status === "Não Conforme").length, 0);
+  const emRevisao = controlesAreas.reduce((acc, a) => acc + a.controles.filter(c => c.status === "Em Revisão").length, 0);
+  const maturidade = Math.round(controlesAreas.reduce((acc, a) => acc + a.conformidade, 0) / controlesAreas.length);
+
+  const statusStyle = (s: string) => {
+    if (s === "Conforme") return { bg: "#10B98122", color: "#10B981" };
+    if (s === "Não Conforme") return { bg: "#EF444422", color: "#EF4444" };
+    return { bg: "#F9731622", color: "#F97316" };
+  };
+
+  return (
+    <div>
+      {/* HEADER */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
+        <div>
+          <h2 style={{ fontSize: isMobile ? "20px" : "32px", margin: 0 }}>Controles Internos & Auditoria</h2>
+          <p style={{ color: "#94A3B8", fontSize: "12px", marginTop: "6px", marginBottom: 0 }}>
+            Maturidade de controles · KCI · Histórico de auditorias · Achados abertos · Plano de ação
+          </p>
+        </div>
+        <BotaoPDF />
+      </div>
+
+      {/* KPIs */}
+      <Grid cols={isMobile ? 2 : 5} gap={12}>
+        {[
+          { label: "Índice de Maturidade", val: `${maturidade}%`, color: maturidade >= 85 ? "#10B981" : "#F97316", sub: "Média geral" },
+          { label: "Controles Conformes", val: String(conformes), color: "#10B981", sub: `de ${totalControles} avaliados` },
+          { label: "Em Revisão", val: String(emRevisao), color: "#F97316", sub: "Aguardam validação" },
+          { label: "Não Conformes", val: String(naoConformes), color: "#EF4444", sub: "Requerem ação" },
+          { label: "Achados Abertos", val: String(achadosAbertos.length), color: "#EF4444", sub: "Em remediação" },
+        ].map((k, i) => (
+          <Card key={i}>
+            <div style={{ color: "#94A3B8", fontSize: "10px", marginBottom: "4px" }}>{k.label}</div>
+            <div style={{ fontSize: "22px", fontWeight: "bold", color: k.color }}>{k.val}</div>
+            <div style={{ color: "#64748B", fontSize: "10px", marginTop: "4px" }}>{k.sub}</div>
+          </Card>
+        ))}
+      </Grid>
+
+      {/* SCORE DE MATURIDADE POR ÁREA */}
+      <Card style={{ marginBottom: "16px" }}>
+        <div style={{ fontWeight: "bold", fontSize: "14px", marginBottom: "14px" }}>Índice de Conformidade por Área</div>
+        <Grid cols={isMobile ? 1 : 4} gap={12}>
+          {controlesAreas.map((a, i) => (
+            <div key={i} style={{ background: "#020617", borderRadius: "12px", padding: "16px", border: "1px solid #1E293B", textAlign: "center" }}>
+              <div style={{ color: "#94A3B8", fontSize: "10px", marginBottom: "6px" }}>{a.sigla}</div>
+              <div style={{ position: "relative", display: "inline-block", marginBottom: "8px" }}>
+                <svg width="80" height="80" viewBox="0 0 140 140">
+                  <circle cx="70" cy="70" r="60" fill="none" stroke="#1E293B" strokeWidth="14" />
+                  <circle cx="70" cy="70" r="60" fill="none"
+                    stroke={a.conformidade >= 85 ? "#10B981" : a.conformidade >= 70 ? "#F97316" : "#EF4444"}
+                    strokeWidth="14"
+                    strokeDasharray={`${(a.conformidade / 100) * 377} 377`}
+                    strokeLinecap="round" transform="rotate(-90 70 70)" />
+                </svg>
+                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center" }}>
+                  <div style={{ fontSize: "16px", fontWeight: "bold", color: a.conformidade >= 85 ? "#10B981" : a.conformidade >= 70 ? "#F97316" : "#EF4444" }}>{a.conformidade}%</div>
+                </div>
+              </div>
+              <div style={{ fontSize: "11px", color: "#94A3B8", lineHeight: "1.3" }}>{a.area.split(" (")[0]}</div>
+            </div>
+          ))}
+        </Grid>
+      </Card>
+
+      {/* ABAS */}
+      <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+        {["Controles por Área", "Achados Abertos", "Histórico de Auditorias"].map((aba, i) => (
+          <button key={i} onClick={() => setAbaAtiva(i)}
+            style={{ flex: 1, padding: isMobile ? "10px 6px" : "12px 14px", borderRadius: "12px", border: abaAtiva === i ? "1px solid #10B981" : "1px solid #1E293B", background: abaAtiva === i ? "#10B98122" : "#111827", color: abaAtiva === i ? "#10B981" : "#94A3B8", fontWeight: abaAtiva === i ? "bold" : "normal", cursor: "pointer", fontSize: isMobile ? "10px" : "12px" }}>
+            {aba}
+          </button>
+        ))}
+      </div>
+
+      {/* ABA 0: CONTROLES POR ÁREA */}
+      {abaAtiva === 0 && (
+        <Card>
+          {controlesAreas.map((area, i) => (
+            <div key={i} style={{ marginBottom: "12px" }}>
+              <div
+                onClick={() => setAreaExpanded(areaExpanded === i ? null : i)}
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", background: "#020617", borderRadius: areaExpanded === i ? "10px 10px 0 0" : "10px", border: "1px solid #1E293B", cursor: "pointer" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "13px", fontWeight: "bold", marginBottom: "4px" }}>{area.area}</div>
+                  <ProgressBar valor={area.conformidade} color={area.conformidade >= 85 ? "#10B981" : area.conformidade >= 70 ? "#F97316" : "#EF4444"} />
+                </div>
+                <div style={{ marginLeft: "16px", textAlign: "right", flexShrink: 0 }}>
+                  <div style={{ fontSize: "18px", fontWeight: "bold", color: area.conformidade >= 85 ? "#10B981" : area.conformidade >= 70 ? "#F97316" : "#EF4444" }}>{area.conformidade}%</div>
+                  <div style={{ color: "#64748B", fontSize: "10px" }}>{areaExpanded === i ? "▲ fechar" : "▼ ver controles"}</div>
+                </div>
+              </div>
+              {areaExpanded === i && (
+                <div style={{ background: "#020617", border: "1px solid #1E293B", borderTop: "none", borderRadius: "0 0 10px 10px", padding: "12px" }}>
+                  {area.controles.map((ctrl, j) => {
+                    const ss = statusStyle(ctrl.status);
+                    return (
+                      <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", background: "#0F172A", borderRadius: "6px", marginBottom: "6px", flexWrap: "wrap", gap: "6px" }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: "12px", marginBottom: "2px" }}>{ctrl.nome}</div>
+                          <div style={{ color: "#64748B", fontSize: "10px" }}>Última: {ctrl.ultima} · KCI: {ctrl.kci}</div>
+                        </div>
+                        <div style={{ padding: "3px 10px", borderRadius: "999px", background: ss.bg, color: ss.color, fontSize: "10px", fontWeight: "bold", flexShrink: 0 }}>{ctrl.status}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ))}
+        </Card>
+      )}
+
+      {/* ABA 1: ACHADOS ABERTOS */}
+      {abaAtiva === 1 && (
+        <Card>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "14px" }}>
+            <span style={{ fontWeight: "bold", fontSize: "14px" }}>Achados em Aberto — Plano de Ação</span>
+            <span style={{ color: "#EF4444", fontSize: "11px" }}>{achadosAbertos.length} pendentes</span>
+          </div>
+          {achadosAbertos.map((a, i) => {
+            const s = getSeverityStyle(a.prioridade);
+            const hoje = new Date();
+            const prazo = new Date(a.prazo.split("/").reverse().join("-"));
+            const diasRestantes = Math.ceil((prazo.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+            return (
+              <div key={i} style={{ background: "#020617", borderRadius: "10px", padding: "14px 16px", marginBottom: "8px", border: `1px solid ${diasRestantes <= 15 ? "#EF444433" : "#1E293B"}` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "10px", flexWrap: "wrap" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "6px" }}>
+                      <span style={{ fontFamily: "monospace", color: "#64748B", fontSize: "10px" }}>{a.id}</span>
+                      <div style={{ padding: "1px 8px", borderRadius: "999px", background: s.bg, color: s.color, fontSize: "10px", fontWeight: "bold" }}>{a.prioridade}</div>
+                    </div>
+                    <div style={{ fontSize: "13px", marginBottom: "4px" }}>{a.descricao}</div>
+                    <div style={{ color: "#64748B", fontSize: "10px" }}>{a.area} · Responsável: {a.responsavel}</div>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ fontSize: "11px", color: diasRestantes <= 15 ? "#EF4444" : "#94A3B8" }}>
+                      {diasRestantes <= 0 ? "⚠ Vencido" : `${diasRestantes} dias`}
+                    </div>
+                    <div style={{ color: "#64748B", fontSize: "10px" }}>Prazo: {a.prazo}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </Card>
+      )}
+
+      {/* ABA 2: HISTÓRICO AUDITORIAS */}
+      {abaAtiva === 2 && (
+        <Card>
+          <div style={{ fontWeight: "bold", fontSize: "14px", marginBottom: "14px" }}>Histórico de Auditorias</div>
+          {!isMobile && (
+            <div style={{ display: "grid", gridTemplateColumns: "100px 1fr 100px 90px 80px 120px 110px", gap: "0", padding: "0 12px", marginBottom: "8px" }}>
+              {["ID", "Área", "Tipo", "Data", "Achados", "Status", "Resultado"].map((h, i) => (
+                <div key={i} style={{ color: "#64748B", fontSize: "10px", fontWeight: "bold" }}>{h}</div>
+              ))}
+            </div>
+          )}
+          {historiocoAuditorias.map((a, i) => {
+            const resColor = a.resultado === "Satisfatório" ? "#10B981" : a.resultado === "Moderado" ? "#F97316" : "#EF4444";
+            const stColor = a.status === "Encerrada" ? "#10B981" : "#F97316";
+            return (
+              <div key={i} style={{ background: "#020617",
