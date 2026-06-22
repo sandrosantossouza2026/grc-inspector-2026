@@ -1665,4 +1665,76 @@ function ControlesAuditoria() {
             const resColor = a.resultado === "Satisfatório" ? "#10B981" : a.resultado === "Moderado" ? "#F97316" : "#EF4444";
             const stColor = a.status === "Encerrada" ? "#10B981" : "#F97316";
             return (
-              <div key={i} style={{ background: "#020617",
+              <div key={i} style={{ background: "#020617", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", border: "1px solid #1E293B", display: isMobile ? "flex" : "grid", gridTemplateColumns: "100px 1fr 100px 90px 80px 120px 110px", flexDirection: "column", gap: "4px" }}>
+                <div style={{ fontFamily: "monospace", color: "#64748B", fontSize: "10px" }}>{a.id}</div>
+                <div style={{ fontSize: "12px" }}>{a.area}</div>
+                <div style={{ color: "#94A3B8", fontSize: "11px" }}>{a.tipo}</div>
+                <div style={{ color: "#94A3B8", fontSize: "11px" }}>{a.data}</div>
+                <div style={{ fontSize: "12px", fontWeight: "bold", color: a.achados > 3 ? "#EF4444" : "#F97316" }}>{a.achados} achados</div>
+                <div style={{ padding: "2px 8px", borderRadius: "999px", background: `${stColor}22`, color: stColor, fontSize: "10px", fontWeight: "bold", width: "fit-content" }}>{a.status}</div>
+                <div style={{ padding: "2px 8px", borderRadius: "999px", background: `${resColor}22`, color: resColor, fontSize: "10px", fontWeight: "bold", width: "fit-content" }}>{a.resultado}</div>
+              </div>
+            );
+          })}
+        </Card>
+      )}
+    </div>
+  );
+}
+// ── FIM TELA CONTROLES & AUDITORIA ──
+
+// ── APP PRINCIPAL ──
+export default function App() {
+  const [logado, setLogado] = useState(false);
+  const [nomeUsuario, setNomeUsuario] = useState("");
+  const [nomeCliente, setNomeCliente] = useState("");
+  const [activeNav, setActiveNav] = useState(0);
+  const [menuAberto, setMenuAberto] = useState(false);
+  const isMobile = useIsMobile();
+
+  const handleLogin = (nome: string, cliente: string) => { setNomeUsuario(nome); setNomeCliente(cliente); setLogado(true); };
+  const handleLogout = () => { setLogado(false); setNomeUsuario(""); setNomeCliente(""); setActiveNav(0); };
+
+  if (!logado) return <TelaLogin onLogin={handleLogin} />;
+
+  const renderTela = () => {
+    switch (activeNav) {
+      case 0: return <DashboardExecutivo />;
+      case 1: return <CentroOperacional />;
+      case 2: return <ComplianceGRC />;
+      case 3: return <TSCM />;
+      case 4: return <DFIR />;
+      case 5: return <InteligenciaExecutiva />;
+      case 6: return <GRC360 />;
+      case 7: return <Terrorismo360 />;
+      case 8: return <RiscosTransacionais />;
+      case 9: return <ControlesAuditoria />;
+      default: return <DashboardExecutivo />;
+    }
+  };
+
+  return (
+    <div style={{ background: "#020617", minHeight: "100vh", color: "white", fontFamily: "Arial", display: "flex", flexDirection: "column" }}>
+
+      {/* TOPBAR MOBILE */}
+      {isMobile && <TopBar menuAberto={menuAberto} setMenuAberto={setMenuAberto} titulo={navItems[activeNav]} />}
+
+      {/* LAYOUT PRINCIPAL */}
+      <div style={{ display: "flex", flex: 1 }}>
+        <Sidebar activeNav={activeNav} setActiveNav={setActiveNav} nomeUsuario={nomeUsuario} nomeCliente={nomeCliente} onLogout={handleLogout} isMobile={isMobile} menuAberto={menuAberto} setMenuAberto={setMenuAberto} />
+
+        {/* CONTEÚDO */}
+        <div style={{ flex: 1, padding: isMobile ? "16px" : "32px 36px", overflowY: "auto", minWidth: 0 }}>
+          {renderTela()}
+        </div>
+      </div>
+
+      {/* FOOTER */}
+      <div style={{ borderTop: "1px solid #1E293B", background: "#0F172A", color: "#94A3B8", fontSize: "11px", textAlign: "center", padding: "12px 20px" }}>
+        GRC Inspector © 2026 — Intelligence Platform
+      </div>
+
+    </div>
+  );
+}
+
